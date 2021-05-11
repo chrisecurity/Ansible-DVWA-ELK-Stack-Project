@@ -6,57 +6,57 @@ The files in this repository were used to configure the network depicted below.
 
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the YAML file may be used to install only certain pieces of it, such as Filebeat.
 
-`---
-  - name: Configure Elk VM with Docker
-    hosts: elk
-    remote_user: sysadmin
-    become: true
-    tasks:
-      # Use apt mobulde
-      - name: Install docker.io
-        apt:
-          update_cache: yes
-          name: docker.io
-          state: present
+    ---
+      - name: Configure Elk VM with Docker
+      hosts: elk
+      remote_user: sysadmin
+      become: true
+      tasks:
+        # Use apt mobulde
+        - name: Install docker.io
+          apt:
+           update_cache: yes
+            name: docker.io
+            state: present
 
-      # Use apt module
-      - name: Install pip3
-        apt:
-          force_apt_get: yes
-          name: python3-pip
-          state: present
+        # Use apt module
+        - name: Install pip3
+          apt:
+            force_apt_get: yes
+            name: python3-pip
+            state: present
 
-      # Use pip module
-      - name: Install Docker python module
-        pip: 
-          name: docker
-          state: present
+        # Use pip module
+        - name: Install Docker python module
+          pip: 
+            name: docker
+            state: present
 
-      # Use sysctl module
-      - name: Use more memory
-        sysctl:
-          name: vm.max_map_count
-          value: "262144"
-          state: present
-          reload: yes
+        # Use sysctl module
+        - name: Use more memory
+          sysctl:
+            name: vm.max_map_count
+            value: "262144"
+            state: present
+            reload: yes
 
-      # Use docker_container module
-      - name: download and launch a docker elk container
-        docker_container:
-          name: elk
-          image: sebp/elk:761
-          state: started
-          restart_policy: always
-          published_ports:
-            - 5601:5601
-            - 9200:9200
-            - 5044:5044
+        # Use docker_container module
+        - name: download and launch a docker elk container
+          docker_container:
+            name: elk
+            image: sebp/elk:761
+            state: started
+            restart_policy: always
+            published_ports:
+              - 5601:5601
+              - 9200:9200
+              - 5044:5044
 
-      # Use systemd module
-      - name: Enable service docker on boot
-        systemd:
-          name: docker
-          enabled: yes`
+        # Use systemd module
+        - name: Enable service docker on boot
+          systemd:
+            name: docker
+            enabled: yes`
 
 This document contains the following details:
 - Description of the Topology
@@ -148,26 +148,32 @@ SSH into the control node and follow the steps below:
 - Update the hosts file to include the webserver and Elk.
 - Run the playbook, and navigate to Kibana (http://[Host IP]:5601/app/kibana#/home) to check that the installation worked as expected.
 - Copy the playbook file to the Ansible Control Node. 
-`$ cd /etc/ansible
-$ mkdir files
-# Clone Repository
-$ git clone https://github.com/chrisecurity/Ansible-DVWA-ELK-Stack-Project.git
-# Move Playbooks and hosts file Into `/etc/ansible`
-$ cp /Ansible-DVWA-ELK-Stack-Project/ReadMe/Playbooks/*`
+        
+      $ cd /etc/ansible
+      $ mkdir files
+      # Clone Repository
+      $ git clone https://github.com/chrisecurity/Ansible-DVWA-ELK-Stack-Project.git
+      # Move Playbooks and hosts file Into `/etc/ansible`
+      $ cp /Ansible-DVWA-ELK-Stack-Project/ReadMe/Playbooks/*
+            
 - Playbooks for [Filebeat](Ansible/install-filebeat.yml) and [Metricbeat](Ansible/install-metricbeat.yml) can be found here.
 - Copy the install-ELK.yml file to /etc/ansible/roles/install-ELK.yml
 - Edit the hosts file to specify which machine to run the Ansible Playbook on. A copy of the hosts file can be seen below
-`[elk]
-10.1.0.4 ansible_python_interpreter=/usr/bin/python3
 
-[webservers]
-10.0.0.5 ansible_python_interpreter=/usr/bin/python3
-10.0.0.6 ansible_python_interpreter=/usr/bin/python3`
+      [elk]
+      10.1.0.4 ansible_python_interpreter=/usr/bin/python3
+
+      [webservers]
+      10.0.0.5 ansible_python_interpreter=/usr/bin/python3
+      10.0.0.6 ansible_python_interpreter=/usr/bin/python3
+
 - Run the Ansible Playbook and install the ELK server. 
-`cd /etc/ansible
- $ ansible-playbook install-ELK.yml elk
- $ ansible-playbook install-filebeat.yml webservers
- $ ansible-playbook install-metricbeat.yml webservers`
+
+      cd /etc/ansible
+      $ ansible-playbook install-ELK.yml elk
+      $ ansible-playbook install-filebeat.yml webservers
+      $ ansible-playbook install-metricbeat.yml webservers`
+
 - To ensure the ELK server is running navigate to http://[Host IP]:5601/app/kibana#/home
 
 ### A few notes
